@@ -22,6 +22,7 @@ namespace BeyondCore.Server
     string localIP;
 
     Func<StreamReader, StreamWriter, int> processFunction;
+    Func<StreamReader, StreamWriter, int> sendFunction;
 
     public BeyondServer()
     {
@@ -40,9 +41,10 @@ namespace BeyondCore.Server
       this.Send(String.Format("Hello Jodie, I am {0}", localIP));
     }
 
-    public void __Setup(Func<StreamReader, StreamWriter, int> processFunction)
+    public void __Setup(Func<StreamReader, StreamWriter, int> processFunction = null, Func<StreamReader, StreamWriter, int> sendFunction = null)
     {
       this.processFunction = processFunction;
+      this.sendFunction = sendFunction;
       t = new Thread(__Start);
       t.IsBackground = true;
     }
@@ -102,11 +104,13 @@ namespace BeyondCore.Server
       writer.WriteLine(command);
       writer.Flush();
 
-      string answer = reader.ReadToEnd();
+      this.sendFunction(reader, writer);
+
+      /*string answer = reader.ReadToEnd();
 
       if (!String.IsNullOrEmpty(answer) && !String.IsNullOrWhiteSpace(answer)) {
         Console.WriteLine("Aiden said: {0}{1}", Environment.NewLine, answer);
-      }
+      }*/
 
       writer.Close();
       reader.Close();

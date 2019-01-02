@@ -12,22 +12,29 @@ namespace Aiden.Server
   {
     public void Setup()
     {
-      // Setup the process function
-      this.__Setup((StreamReader reader, StreamWriter writer) => {
-        string received = (string)reader.ReadLine();
+      this.__Setup(this.ProcessFn, this.SendFn);
+    }
 
-        if (!received.Contains("Hello Jodie, I am")) {
-          try {
-            AidenCommand c = new AidenCommand(received);
-            writer.WriteLine(c.execute());
-          }
-          catch (Exception ex) {
-            writer.WriteLine(String.Format("Error executing the command: {0}{1}{2}", ex.Message, Environment.NewLine, ex.StackTrace));
-          }
+    private int ProcessFn(StreamReader reader, StreamWriter writer)
+    {
+      string received = (string)reader.ReadLine();
+
+      if (!received.Contains("Hello Jodie, I am")) {
+        try {
+          AidenCommand c = new AidenCommand(received);
+          writer.WriteLine(c.execute());
         }
+        catch (Exception ex) {
+          writer.WriteLine(String.Format("Error executing the command: {0}{1}{2}", ex.Message, Environment.NewLine, ex.StackTrace));
+        }
+      }
 
-        return 0;
-      });      
+      return 0;
+    }
+
+    private int SendFn(StreamReader reader, StreamWriter writer)
+    {
+      return 0;
     }
   }
 }
