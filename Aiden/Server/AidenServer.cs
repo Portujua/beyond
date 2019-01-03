@@ -19,6 +19,8 @@ namespace Aiden.Server
     {
       string received = (string)reader.ReadLine();
 
+      Console.WriteLine("Received: {0}", received);
+
       if (!received.Contains("Hello Jodie, I am")) {
         try {
           AidenCommand c = new AidenCommand(received);
@@ -32,7 +34,7 @@ namespace Aiden.Server
       return 0;
     }
 
-    private int SendFn(StreamReader reader, StreamWriter writer)
+    private int SendFn(string received)
     {
       return 0;
     }

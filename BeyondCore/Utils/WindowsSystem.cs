@@ -33,7 +33,7 @@ namespace BeyondCore.Utils
 
       try {
         foreach (Process p in list) {
-          if (p.MainWindowTitle.ToLower().Contains(title.ToLower())) {
+          if (p.MainWindowTitle.ToLower().Contains(title.ToLower()) || ((int)p.MainWindowHandle).ToString().Equals(title)) {
             string addedFile = ScreenCapturer.CaptureAndSave(p.MainWindowHandle);
             filenamesList.Add(addedFile);
           }

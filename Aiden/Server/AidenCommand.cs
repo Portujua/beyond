@@ -25,12 +25,10 @@ namespace Aiden.Server
       switch (this.getCommandType()) {
         case (int)CommandType.ListProcesses:
           List<Process> processList = WindowsSystem.ListProcesses();
-
-          result += "--------------------------" + Environment.NewLine;
+          
           processList.ForEach((process) => {
             result += String.Format("{0} (hWnd: {1})", process.MainWindowTitle, process.MainWindowHandle) + Environment.NewLine;
           });
-          result += "--------------------------" + Environment.NewLine;
 
           break;
         case (int)CommandType.WindowScreenshot:

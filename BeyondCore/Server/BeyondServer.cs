@@ -20,9 +20,11 @@ namespace BeyondCore.Server
     TcpListener listener;
     TcpClient client;
     string localIP;
+    string ipAddress = BeyondServer.JODIE;
+    int port = BeyondServer.JODIE_PORT;
 
     Func<StreamReader, StreamWriter, int> processFunction;
-    Func<StreamReader, StreamWriter, int> sendFunction;
+    Func<string, int> sendFunction;
 
     public BeyondServer()
     {
@@ -41,7 +43,7 @@ namespace BeyondCore.Server
       this.Send(String.Format("Hello Jodie, I am {0}", localIP));
     }
 
-    public void __Setup(Func<StreamReader, StreamWriter, int> processFunction = null, Func<StreamReader, StreamWriter, int> sendFunction = null)
+    public void __Setup(Func<StreamReader, StreamWriter, int> processFunction = null, Func<string, int> sendFunction = null)
     {
       this.processFunction = processFunction;
       this.sendFunction = sendFunction;
@@ -49,8 +51,16 @@ namespace BeyondCore.Server
       t.IsBackground = true;
     }
 
-    public void Start()
+    public void Start(string ipAddress = null, int port = -1)
     {
+      if (ipAddress != null) {
+        this.ipAddress = ipAddress;
+      }
+
+      if (port != -1) {
+        this.port = port;
+      }
+
       t.Start();
     }
 
@@ -59,7 +69,7 @@ namespace BeyondCore.Server
       listener = null;
 
       try {
-        listener = new TcpListener(IPAddress.Parse(BeyondServer.JODIE), BeyondServer.JODIE_PORT);
+        listener = new TcpListener(IPAddress.Parse(this.ipAddress), this.port);
         listener.Start();
 
         while (true) {
@@ -96,7 +106,7 @@ namespace BeyondCore.Server
 
     public void Send(object command)
     {
-      client = new TcpClient(BeyondServer.JODIE, BeyondServer.JODIE_PORT);
+      client = new TcpClient(this.ipAddress, this.port);
 
       StreamReader reader = new StreamReader(client.GetStream());
       StreamWriter writer = new StreamWriter(client.GetStream());
@@ -104,7 +114,7 @@ namespace BeyondCore.Server
       writer.WriteLine(command);
       writer.Flush();
 
-      this.sendFunction(reader, writer);
+      this.sendFunction(reader.ReadToEnd());
 
       /*string answer = reader.ReadToEnd();
 

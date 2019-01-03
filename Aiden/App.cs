@@ -20,15 +20,17 @@ namespace Aiden
       server.Setup();
       server.Start();
 
+      Console.WriteLine("Aiden is ready! >:)");
+
       // Say hello!
-      server.Greet();
+      //server.Greet();
 
       while (true) {
         // Main logic
-        server.Send(Console.ReadLine());
+        //server.Send(Console.ReadLine());
 
         // Thread sleep
-        Thread.Sleep(3000);
+        Thread.Sleep(10);
       }
     }
   }
